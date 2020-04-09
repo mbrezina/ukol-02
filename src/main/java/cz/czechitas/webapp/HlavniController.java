@@ -1,6 +1,7 @@
 package cz.czechitas.webapp;
 
 import org.springframework.stereotype.*;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.*;
 
@@ -10,69 +11,125 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.stream.Stream;
 
 @Controller
 public class HlavniController {
 
-    /*
-    private static final List<String> JIDLO = Arrays.asList(
-            "Krentenboly",
-            "Peppernoten",
-            "Oliebollen",
-            "Haring",
-            "Stropvafle",
-            "Kroket",
-            "Gouda",
-            "Pindakaas",
-            "Hagelslag"
-    );
+    Long sekvence = 1000L;
+    private List<Clanek> seznamClanku;
 
-    private static final List<String> POPIS = Arrays.asList(
-            "jsou sladké housky trochu podobné naší vánočce, Nizozemci si do nich dávají sýr",
-            "jsou sladkosti, které se prodávají kolem Mikuláše",
-            "jsou koblihy, co se jedí na konci roku, každoročně noviny uveřejňují žebříček těch nejlepších prodejců",
-            "je naložený slaneček s cibulí, kupují se ve stáncích, jinak Nizozemci mají rádi také smažené ryby",
-            "jsou sladké kulaté oplatky spojené sirupem, dají se koupit i v ČR, ale nemají tu chuť",
-            "já vlastně nevím, co to je, je to nějaké mleté maso a můj holandský muž se po tom může utlouct",
-            "je tvrdý sýr vyráběný holandským způsobem, je jich strašně moc druhů, například starý, mladý, kmínový...",
-            "je burákové máslo, doslova to znamená burákový sýr",
-            "jsou malé kousky čokolády, které se sypou na chleba, nebo mohou být ovocné a barevné"
-    );
-    */
-    @RequestMapping({"/", "/index.html"})
+    public HlavniController() {
+        seznamClanku = new ArrayList<>();
+        seznamClanku.add(new Clanek(sekvence++, "Velikonoce se blíží", "Karel May"));
+        seznamClanku.add(new Clanek(sekvence++, "Recept na Mazanec", "Jana Novotná"));
+        seznamClanku.add(new Clanek(sekvence++, "Koronavirus", "Kája Mařík"));
+        seznamClanku.add(new Clanek(sekvence++, "Kindervajíčka jsou ve slevě", "Apolena Malá"));
+        seznamClanku.add(new Clanek(sekvence++, "Vánoce jsou tady", "Pavel Slepička"));
+    }
+
+
+    @RequestMapping(value = "/", method = RequestMethod.GET)
     public ModelAndView zobrazIndex() {
+        return new ModelAndView("redirect:/seznam");
+    }
+
+    @RequestMapping(value = "/seznam", method = RequestMethod.GET)
+    public ModelAndView zobrazSeznam() {
         ModelAndView drzak = new ModelAndView("index");
-        List<Eten> seznamJidla = new ArrayList<>();
-        seznamJidla.add(new Eten("Krentenboly","jsou sladké housky trochu podobné naší vánočce, Nizozemci si do nich dávají sýr"));
-        seznamJidla.add(new Eten("Peppernoten","jsou sladkosti, které se prodávají kolem Mikuláše"));
-        seznamJidla.add(new Eten("Oliebollen", "jsou koblihy, co se jedí na konci roku, každoročně noviny uveřejňují žebříček těch nejlepších prodejců"));
-        seznamJidla.add(new Eten("Haring", "je naložený slaneček s cibulí, kupují se ve stáncích, jinak Nizozemci mají rádi také smažené ryby"));
-        seznamJidla.add(new Eten("Stropvafle", "jsou sladké kulaté oplatky spojené sirupem, dají se koupit i v ČR, ale nemají tu chuť"));
-        seznamJidla.add(new Eten("Kroket", "je to pečené mleté maso, ale vlastně nevím co to je, můj muž se po tom může utlouct"));
-        seznamJidla.add(new Eten("Gouda", "je tvrdý sýr vyráběný holandským způsobem, je jich strašně moc druhů, například starý, mladý, kmínový..."));
-        seznamJidla.add(new Eten("Pindakaas", "je burákové máslo, doslova to znamená burákový sýr"));
-        seznamJidla.add(new Eten("Hagelslag", "jsou malé kousky čokolády, které se sypou na chleba, nebo mohou být ovocné a barevné"));
-
-
-        System.out.println("Vybírám další jídlo");
-
-        //ModelAndView drzak = new ModelAndView("index");
-        int nahoda = (int) (Math.random() * seznamJidla.size() );
-        System.out.println(nahoda);
-        Eten jedno_jidlo = seznamJidla.get(nahoda);
-        System.out.println(jedno_jidlo.getNazev());
-        drzak.addObject("objekt_jidla", jedno_jidlo);
-
-        ++nahoda;
-        String jeden_odkaz = "images/" + nahoda + ".jpg";
-        System.out.println(jeden_odkaz);
-        drzak.addObject("odkazNaObrazek", jeden_odkaz);
-        drzak.addObject("datum", LocalDateTime.now());
-
+        drzak.addObject("clanky", seznamClanku);
         return drzak;
     }
+
+    @RequestMapping(value = "/seznam/{idClanku}", method = RequestMethod.POST, params = "_method=DELETE")
+    public ModelAndView smazClanek(@PathVariable("idClanku") Long idClanku) {
+        smazClanekPodleCisla(idClanku);
+        return new ModelAndView("redirect:/seznam");
+    }
+
+
+    @RequestMapping(value = "/detail/{idClanku:[0-9]+}", method = RequestMethod.GET)
+    public ModelAndView zobrazDetail(@PathVariable Long idClanku) {
+        ModelAndView drzak = new ModelAndView("detail");
+        Clanek jeden = findById(idClanku);
+        drzak.addObject("jedenClanek", jeden);
+        return drzak;
+    }
+
+    @RequestMapping(value = "/detail/{idClanku:[0-9]+}", method = RequestMethod.POST)
+    public ModelAndView zpracujDetail(@PathVariable("idClanku") Long idClanku, DetailForm detailForm) {
+        upravClanek(idClanku, detailForm);
+        return new ModelAndView("redirect:/seznam");
+    }
+
+    @RequestMapping(value = "/novy", method = RequestMethod.GET)
+    public ModelAndView zobrazNovy() {
+        ModelAndView drzak = new ModelAndView("detail");
+        drzak.addObject("jedenClanek", new DetailForm());
+        return drzak;
+
+        //upravClanek(cislo, detailForm);
+        //return new ModelAndView("redirect:/seznam");
+    }
+
+    @RequestMapping(value = "/novy", method = RequestMethod.POST)
+    public ModelAndView zpracujNovy(DetailForm detailForm) {
+        ModelAndView drzak = new ModelAndView("detail");
+        ulozClanek(detailForm);
+        return new ModelAndView("redirect:/seznam");
+
+    }
+
+    private void ulozClanek(DetailForm detailform) {
+        String nazev = detailform.getNazev();
+        String autor = detailform.getAutor();
+        Clanek novyClanek = new Clanek(sekvence++, nazev, autor);
+        seznamClanku.add(novyClanek);
+    }
+
+    private void upravClanek(Long cislo, DetailForm detailForm) {
+        Clanek upravovanyClanek = findById(cislo);
+        upravovanyClanek.setNazev(detailForm.getNazev());
+        upravovanyClanek.setAutor(detailForm.getAutor());
+
+    }
+
+    private void smazClanekPodleCisla(Long idClanku) {
+        Clanek clanek = findById(idClanku);
+        seznamClanku.remove(clanek);
+
+    }
+
+    //private int ziskejIndexClankuPodleCisla(Long idClanku) {
+    //   for (int i = 0; i < clanky.size(); i++) {
+    //      if (clanky.get(i).getIdClanku().equals(idClanku)) {
+    //         return i;
+    //     }
+    //    }
+    //    return -1;
+    //}
+
+
+    //    private Clanek ziskejClanekPodleCisla(Long idClanku) {
+//        int index = ziskejIndexClankuPodleCisla(idClanku);
+//        return seznamClanku.get(index);
+//    }
+//
+    private Clanek findById(Long idHledanehoClanku) {
+        for (Clanek clanek : seznamClanku) {
+            if (clanek.getIdClanku().equals(idHledanehoClanku)) {
+                return clanek;
+            }
+        }
+        return null;
+
+    }
+
+
 }
+
+
 
 
 

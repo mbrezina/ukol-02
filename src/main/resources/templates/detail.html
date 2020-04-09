@@ -41,40 +41,39 @@
 
 <div class="container">
     <div class="jumbotron">
-<br><br><br>
-        <h1>Seznam kontaktů</h1>
+        <br><br><br>
+        <h1>Detail článku</h1>
 
-        <table>
-            <tr>
-                <th>Číslo</th>
-                <th>Název</th>
-                <th>Autor</th>
-                <th>Akce</th>
-            </tr>
-            <tr th:each="clanek : ${clanky}">
-                <td th:text="${clanek.idClanku}">1</td>
-                <td th:text="${clanek.nazev}">První článek</td>
-                <td th:text="${clanek.autor}">Kamil Ševeček</td>
-                <td>
-                    <a th:href="@{'/detail/' + ${clanek.idClanku}}"  href="detail.html" class="ui-button">Detail</a>
-                </td>
-                <td>
-                    <form th:action="@{'/seznam/' + ${clanek.idClanku}}"  method="post">
-                        <input type="hidden" name="_method" value="DELETE"/>
-                        <input type="submit" value="Smazat" class="ui-button"/>
-                    </form>
-                </td>
-            </tr>
-        </table>
+        <form method="post">
+            <table>
+                <tr>
+                    <td>Název:</td>
+                    <td>
+                        <input type="text" name="nazev" value="První článek" th:value="${jedenClanek.nazev}"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Autor:</td>
+                    <td>
+                        <input type="text" name="autor" value="Lois Lane" th:value="${jedenClanek.autor}"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                    <input type="submit" value="Uložit" class="ui-button"/>
+                    <a th:href="@{'/seznam'}" href="index.html" class="ui-button">Zpět</a>
+                    <td>
+                </tr>
+            </table>
+        </form>
 
-        <a th:href="@{'/novy'}"  href="detail.html" class="ui-button">Vytvořit nový článek</a>
 
     </div>
     <footer class="paticka">
         <br>
         <p>@2020 Martina Burjanová, CSS by <a href="https://bootswatch.com/materia/">Materia Bootswatch</a></p>
     </footer>
-
+</div>
 
 </body>
 </html>
