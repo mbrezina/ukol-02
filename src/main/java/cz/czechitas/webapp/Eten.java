@@ -1,10 +1,20 @@
 package cz.czechitas.webapp;
 
 public class Eten {
+    private Integer index;
     private String nazev;
     private String popis;
 
-    public Eten(String nazev, String popis) {
+    public void setIndex(Integer index) {
+        this.index = index;
+    }
+
+    public Integer getIndex() {
+        return index;
+    }
+
+    public Eten(Integer index, String nazev, String popis) {
+        this.index = index;
         this.nazev = nazev;
         this.popis = popis;
     }

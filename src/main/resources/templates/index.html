@@ -56,17 +56,15 @@
         </p>
         <hr class="my-4">
 
-        <h2 th:text="${objekt_jidla.nazev}">jedno nizozemské jídlo</h2>
-        <h3 th:text="${objekt_jidla.popis}">popis jídla</h3><br>
-        <img class="obrazek_jidla" src="images/jidlo_obrazek.png" th:src="${odkazNaObrazek}" alt="jedno_holandske_jidlo"
-             th:alt="${nizozemskeJidlo}"/>
+        <h2 id=""nazevJidla>jedno nizozemské jídlo</h2>
+        <h3 id="popisJidla">popis jídla</h3><br>
+        <img class="obrazek_jidla" src="images/jidlo_obrazek.png" alt="jedno_holandske_jidlo"/>
         <br>
         <p>Typická holandská jídla můžete koupit také v <a
                 href="https://www.dutchexpatshop.com/en?gclid=CjwKCAiA-vLyBRBWEiwAzOkGVDd71dspQVJfdFtnSegexRp0lCr71_ejnfRe3L3o_N4Fo4m26xkm4xoCrAQQAvD_BwE">eshopu</a>.
         </p>
-        <p>Přesný čas: <span th:text="${#temporals.format(datum, 'd. M. yyyy HH:mm:ss')}">4. 3. 2020 15:26:26</span></p>
         <br>
-        <button class="btn btn-warning" onclick="window.location.reload();">Chci víc!</button>
+        <button class="btn btn-warning" onclick="nactiJidlok();">Chci víc jídla</button>
     </div>
         <footer class="paticka">
             <br>
