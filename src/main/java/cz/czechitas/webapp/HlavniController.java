@@ -16,10 +16,9 @@ import java.util.stream.Stream;
 @Controller
 public class HlavniController {
     Map<Integer, Eten> zasobaJidla;
-
     @RequestMapping("/nahodny")
     public @ResponseBody
-    String posliJidlo() throws JsonProcessingException {
+    Eten posliJidlo() throws JsonProcessingException {
         ModelAndView drzak = new ModelAndView("index");
         zasobaJidla = new TreeMap<>();
         zasobaJidla.put(0, new Eten(0, "Krentenboly", "jsou sladké housky trochu podobné naší vánočce, Nizozemci si do nich dávají sýr"));
@@ -38,10 +37,10 @@ public class HlavniController {
         System.out.println(nahoda);
         Eten jedno_jidlo = zasobaJidla.get(nahoda);
         System.out.println(jedno_jidlo);
-
-        ObjectMapper mapper = new ObjectMapper();
-        String jsonStr = mapper.writeValueAsString(jedno_jidlo);
-        return jsonStr;
+        return jedno_jidlo;
+        //ObjectMapper mapper = new ObjectMapper();
+        //String jsonStr = mapper.writeValueAsString(jedno_jidlo);
+        //return jsonStr;
 
     }
 }
