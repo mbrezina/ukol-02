@@ -1,11 +1,10 @@
 "use strict";
 
-//var elementVyrok = document.querySelector("#vyrok");
-//elementVyrok.innerText = "Testing if it works";
-let obrazekJidla = document.querySelector(".obrazek_jidla")
-let popis_Jidla = document.querySelector("#popisJidla");
+let obrazekJidla = document.querySelector("#obrazekJidla")
+let popisJidla = document.querySelector("#popisJidla");
 let nazevJidla = document.querySelector("#nazevJidla");
-
+let tlacitko = document.querySelector("#tlacitko");
+let uvod = document.querySelector("#uvod");
 
 function nactiJidlo() {
     var httpKlient = new XMLHttpRequest();
@@ -16,22 +15,16 @@ function nactiJidlo() {
 }
 
 function hotovo() {
-    console.log("toto je this.response " + this.response);
-    console.log("toto je popis: " + this.response["popis"]);
-    console.log("toto je název: " + this.response.nazev);
-
-    var jsonData = this.response.clientDataJSON;
-    console.log("hodnota z json data value: " + jsonData['popis']);
-    console.log("hodnota z json data value: " + jsonData.hasOwnProperty(popis_Jidla));
-
-    popisJidla.innerText = this.response
-    console.log("další pokus " + this.response.valueOf("popis"));
-    //console.log(this.response);
-
-    console.log("toto je popis: " + this.response.popis);
-    nazevJidla.innerText = this.response.nazev;
-
-    obrazekJidla.src = "images/" + this.response.index + ".jpg"
+    var Eten = JSON.parse(this.response);
+    nazevJidla.innerText = Eten.nazev;
+    nazevJidla.classList.add("display-3");
+    popisJidla.innerText = Eten.popis;
+    obrazekJidla.src = "images/" + Eten.index + ".jpg";
+    obrazekJidla.classList.add("obrazek_jidla");
+    tlacitko.innerHTML = "Chci víc jídla";
+    tlacitko.classList.remove("btn-warning");
+    tlacitko.classList.add("btn-success");
+    uvod.innerHTML = "";
 
 }
 

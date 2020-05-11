@@ -5,6 +5,11 @@ public class Eten {
     private String nazev;
     private String popis;
 
+    @Override
+    public String toString() {
+        return index + ", " + nazev + ", " + popis;
+    }
+
     public void setIndex(Integer index) {
         this.index = index;
     }

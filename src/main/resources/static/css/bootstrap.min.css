@@ -380,6 +380,7 @@ h6, .h6 {
 }
 
 .display-3 {
+    margin-top: 4rem;
     font-size: 4.5rem;
     font-weight: 300;
     line-height: 1.2
@@ -5621,7 +5622,7 @@ a.badge-dark:focus, a.badge-dark.focus {
 
 .jumbotron {
     padding: 2rem 1rem;
-    margin-bottom: 2rem;
+    margin-bottom: 0rem;
     background-color: #eee;
     border-radius: 0.3rem
 }
@@ -7220,6 +7221,11 @@ a.bg-dark:hover, a.bg-dark:focus, button.bg-dark:hover, button.bg-dark:focus {
 .bg-gradient-primary {
     background: #2196F3 -webkit-gradient(linear, left top, left bottom, from(#42a6f5), to(#2196F3)) repeat-x !important;
     background: #2196F3 linear-gradient(180deg, #42a6f5, #2196F3) repeat-x !important
+}
+
+.bg-gradient-oranje {
+    background: #FF6600 -webkit-gradient(linear, left top, left bottom, from(#FFA500), to(#FF6600)) repeat-x !important;
+    background: #FF6600 linear-gradient(180deg, #FFA500, #FF6600) repeat-x !important
 }
 
 .bg-gradient-secondary {
@@ -12278,6 +12284,8 @@ select[multiple], select.form-control[multiple] {
 }
 .obrazek_jidla {
     display: block;
+    margin-top: 2rem;
+    margin-bottom: 2rem;
     margin-left: auto;
     margin-right: auto;
     width: 50%;
